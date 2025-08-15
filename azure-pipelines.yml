@@ -11,11 +11,10 @@ variables:
   packagePath: '$(Build.ArtifactStagingDirectory)/drop.zip'
 
 steps:
-# Use your Mac’s Python directly (no UsePythonVersion task)
 - script: |
     python3 -V
     python3 -m pip install --upgrade pip setuptools wheel
-    # Prefer prebuilt wheels; avoids source builds on macOS
+    # Use prebuilt wheels where possible to avoid macOS build issues
     python3 -m pip install --only-binary=:all: --no-cache-dir -r requirements.txt
     make lint
     make test
@@ -39,12 +38,7 @@ steps:
 - task: AzureWebApp@1
   displayName: 'Deploy to Azure Web App'
   inputs:
-    azureSubscription: 'azure-spn'   # your service connection name
+    azureSubscription: 'azure-spn'   # the service connection you created
     appType: 'webAppLinux'
     appName: '$(webAppName)'
     package: '$(packagePath)'
-
-    appName: '$(webAppName)'
-    package: '$(packagePath)'
-
-
