@@ -1,10 +1,13 @@
-Flask==2.3.3
+flask==2.3.3
 gunicorn==20.1.0
+
+# test & lint
 pytest==7.4.0
 pylint==2.17.5
-joblib==1.5.1
-scikit-learn==1.7.1
-numpy==2.2.2
-pandas==2.2.2
-scipy==1.12.0
-threadpoolctl==3.6.0
+
+# ML stack (compatible set for py3.10 + macOS)
+numpy==1.24.4
+scipy==1.10.1
+pandas==2.0.3
+scikit-learn==1.2.2
+joblib==1.3.2
