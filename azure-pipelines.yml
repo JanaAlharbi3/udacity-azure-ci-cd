@@ -2,26 +2,26 @@ trigger:
 - main
 
 pool:
-  name: 'SelfHosted'   # use your pool
+  name: 'SelfHosted'
 
 variables:
-  pythonVersion: '3.10'
   webAppName: 'flaskml-jana-151905'
   resourceGroup: 'udacity-rg-centralus'
   artifactName: 'drop'
   packagePath: '$(Build.ArtifactStagingDirectory)/drop.zip'
 
 steps:
-- task: UsePythonVersion@0
-  inputs:
-    versionSpec: '$(pythonVersion)'
-
+# Use the system Python 3 on your Mac agent
 - script: |
-    python -m pip install --upgrade pip
-    pip install -r requirements.txt
-    make lint
-    make test
-  displayName: 'Install, Lint, Test'
+    set -e
+    which python3
+    python3 -V
+    python3 -m pip install --upgrade pip
+    python3 -m pip install -r requirements.txt
+    # Run the same checks the Makefile does, but with python3 explicitly
+    pylint --disable=R,C hello.py
+    python3 -m pytest -vv
+  displayName: 'Install deps + lint + test'
 
 - task: ArchiveFiles@2
   displayName: 'Create deployment package'
@@ -45,4 +45,5 @@ steps:
     appType: 'webAppLinux'
     appName: '$(webAppName)'
     package: '$(packagePath)'
+
 
