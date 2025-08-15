@@ -2,7 +2,7 @@ trigger:
 - main
 
 pool:
-  name: 'SelfHosted'
+  name: 'SelfHosted'        # your Mac agent pool
 
 variables:
   webAppName: 'flaskml-jana-151905'
@@ -11,16 +11,14 @@ variables:
   packagePath: '$(Build.ArtifactStagingDirectory)/drop.zip'
 
 steps:
-# Use the system Python 3 on your Mac agent
+# Use your Mac’s Python directly (no UsePythonVersion task)
 - script: |
-    set -e
-    which python3
     python3 -V
-    python3 -m pip install --upgrade pip
-    python3 -m pip install -r requirements.txt
-    # Run the same checks the Makefile does, but with python3 explicitly
-    pylint --disable=R,C hello.py
-    python3 -m pytest -vv
+    python3 -m pip install --upgrade pip setuptools wheel
+    # Prefer prebuilt wheels; avoids source builds on macOS
+    python3 -m pip install --only-binary=:all: --no-cache-dir -r requirements.txt
+    make lint
+    make test
   displayName: 'Install deps + lint + test'
 
 - task: ArchiveFiles@2
@@ -41,8 +39,11 @@ steps:
 - task: AzureWebApp@1
   displayName: 'Deploy to Azure Web App'
   inputs:
-    azureSubscription: 'azure-spn'
+    azureSubscription: 'azure-spn'   # your service connection name
     appType: 'webAppLinux'
+    appName: '$(webAppName)'
+    package: '$(packagePath)'
+
     appName: '$(webAppName)'
     package: '$(packagePath)'
 
