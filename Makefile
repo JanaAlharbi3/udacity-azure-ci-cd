@@ -1,9 +1,9 @@
 install:
-	pip install --upgrade pip && \
-	pip install -r requirements.txt
+	python3 -m pip install --upgrade pip setuptools wheel
+	python3 -m pip install --only-binary=:all: -r requirements.txt
 
 test:
-	python -m pytest -vv
+	python3 -m pytest -vv
 
 lint:
 	pylint --disable=R,C hello.py
