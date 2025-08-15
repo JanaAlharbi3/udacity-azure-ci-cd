@@ -2,12 +2,12 @@ trigger:
 - main
 
 pool:
-  vmImage: ubuntu-latest
+  name: 'SelfHosted'   # use your pool
 
 variables:
   pythonVersion: '3.10'
-  webAppName: 'flaskml-jana-151905'      # your existing App Service
-  resourceGroup: 'udacity-rg-centralus'   # your RG
+  webAppName: 'flaskml-jana-151905'
+  resourceGroup: 'udacity-rg-centralus'
   artifactName: 'drop'
   packagePath: '$(Build.ArtifactStagingDirectory)/drop.zip'
 
@@ -38,17 +38,6 @@ steps:
     pathToPublish: '$(Build.ArtifactStagingDirectory)'
     artifactName: '$(artifactName)'
 
-- task: AzureCLI@2
-  displayName: 'Ensure build-on-deploy app settings'
-  inputs:
-    azureSubscription: 'azure-spn'
-    scriptType: 'bash'
-    scriptLocation: 'inlineScript'
-    inlineScript: |
-      az webapp config appsettings set \
-        -g "$(resourceGroup)" -n "$(webAppName)" \
-        --settings SCM_DO_BUILD_DURING_DEPLOYMENT=true
-
 - task: AzureWebApp@1
   displayName: 'Deploy to Azure Web App'
   inputs:
@@ -56,3 +45,4 @@ steps:
     appType: 'webAppLinux'
     appName: '$(webAppName)'
     package: '$(packagePath)'
+
