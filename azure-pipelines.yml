@@ -1,0 +1,58 @@
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  pythonVersion: '3.10'
+  webAppName: 'flaskml-jana-151905'      # your existing App Service
+  resourceGroup: 'udacity-rg-centralus'   # your RG
+  artifactName: 'drop'
+  packagePath: '$(Build.ArtifactStagingDirectory)/drop.zip'
+
+steps:
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: '$(pythonVersion)'
+
+- script: |
+    python -m pip install --upgrade pip
+    pip install -r requirements.txt
+    make lint
+    make test
+  displayName: 'Install, Lint, Test'
+
+- task: ArchiveFiles@2
+  displayName: 'Create deployment package'
+  inputs:
+    rootFolderOrFile: '$(Build.SourcesDirectory)'
+    includeRootFolder: false
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/drop.zip'
+    replaceExistingArchive: true
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish artifact'
+  inputs:
+    pathToPublish: '$(Build.ArtifactStagingDirectory)'
+    artifactName: '$(artifactName)'
+
+- task: AzureCLI@2
+  displayName: 'Ensure build-on-deploy app settings'
+  inputs:
+    azureSubscription: 'azure-spn'
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      az webapp config appsettings set \
+        -g "$(resourceGroup)" -n "$(webAppName)" \
+        --settings SCM_DO_BUILD_DURING_DEPLOYMENT=true
+
+- task: AzureWebApp@1
+  displayName: 'Deploy to Azure Web App'
+  inputs:
+    azureSubscription: 'azure-spn'
+    appType: 'webAppLinux'
+    appName: '$(webAppName)'
+    package: '$(packagePath)'
