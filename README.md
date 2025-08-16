@@ -17,6 +17,9 @@ A tiny ML web API deployed to **Azure App Service** with **CI (GitHub Actions)**
   https://trello.com/invite/b/689f402b57e48c9a6e8511d7/ATTI946a399131637955cd0654d305bb1fd02822C96B/udacity-azure-ci-cd
 - **Project Plan (Excel):** `udacity_azure_ci_cd_plan.xlsx`
 
+## Video link
+-https://youtu.be/F8mm-3J5bFY
+
 ## Architecture
 
 ```mermaid
