@@ -17,7 +17,7 @@ A tiny ML web API deployed to **Azure App Service** with **CI (GitHub Actions)**
 
 - **Trello Board (To Do / In Progress / Done):**  
   https://trello.com/invite/b/689f402b57e48c9a6e8511d7/ATTI946a399131637955cd0654d305bb1fd02822C96B/udacity-azure-ci-cd
-- **Project Plan (Excel):** `udacity_azure_ci_cd_plan.xlsx`
+- **Project Plan (Excel):** `https://studentksuedu-my.sharepoint.com/:x:/g/personal/442202214_student_ksu_edu_sa/EZ4NjJuwRcBOmTfpWsTmEwQBmcX618o72bql2TCaw4Oiag?e=f2WJye`
 - **Demo Video:** https://youtu.be/F8mm-3J5bFY
 
 ---
